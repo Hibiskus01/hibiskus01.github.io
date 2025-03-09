@@ -1,0 +1,79 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+  background-color: #f8f9fa;
+}
+#click-button {
+  border-radius: 50px;
+  font-size: 1.5rem;
+}
+#upgrade-button {
+  border-radius: 50px;
+  font-size: 1.2rem;
+}
+h1 {
+  font-weight: bold;
+  color: #343a40;
+}
+.standard{
+  padding = 40px;
+}
+footer {
+  margin: 0px;
+  margin-top: 30px;
+  text-align: center;
+  position: fixed;
+  bottom: 0px;
+  width:100%;
+}
+body {
+    padding-bottom:120px;
+}
+#game-container {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  border: 2px solid black;
+  overflow: hidden;
+  background-color: #f4f4f4;
+}
+.bitcoin {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+}
+#player {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: gold;
+  border-radius: 50%;
+

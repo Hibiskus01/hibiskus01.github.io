@@ -1,0 +1,441 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - Bitcoin Clicker{% endblock %}
+
+{% block main %}
+<div class="text-center py-5">
+    <h1 class="mb-4 display-3 fw-bold text-warning">Bitcoin Clicker</h1>
+    <p class="lead">Click the button to earn points and upgrade your mining power!</p>
+
+    <div class="card shadow-lg p-4 d-inline-block mt-3" style="border-radius: 15px; background: #f8f9fa;">
+        <h2 id="score" class="display-4 fw-bold text-primary">0</h2>
+        <h4 id="second" class="text-muted">0 per Second</h4>
+        <h4 id="click" class="text-muted">0 per Click</h4>
+        <button id="click-button" class="btn btn-primary btn-lg px-5 py-3 mt-3 shadow" style="border-radius: 50%;">
+            <img src="static/Bitcoin.webp" alt="Button Image" width="100" height="100">
+        </button>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Upgrades</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Upgrade 1</h3>
+                    <button id="upgrade-button1" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 10)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Upgrade 2</h3>
+                    <button id="upgrade-button2" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 20)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Upgrade 3</h3>
+                    <button id="upgrade-button3" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 30)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Passive 1</h3>
+                    <button id="upgrade-button4" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 300)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Passive 2</h3>
+                    <button id="upgrade-button5" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 600)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Passive 3</h3>
+                    <button id="upgrade-button6" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 900)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Score Boost1</h3>
+                    <button id="upgrade-button7" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 3000)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Score Boost 2</h3>
+                    <button id="upgrade-button8" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 6000)</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Score Boost 3</h3>
+                    <button id="upgrade-button9" class="btn btn-success btn-lg w-100" disabled>Upgrade (Cost: 9000)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2 class="mb-4">Mini-Games</h2>
+        <div class="row g-3">
+            <!-- Mini Game 1 -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3 class="c">Mini-Game 1</h3>
+                    <a id="game1-link" class="btn btn-info btn-lg w-100" href="/game1">Play Game</a>
+                </div>
+            </div>
+            <!-- Mini Game 2 -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Mini-Game 2</h3>
+                    <a id="game2-link" class="btn btn-info btn-lg w-100" href="/game2">Play Game</a>
+                </div>
+            </div>
+            <!-- Mini Game 3 -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm text-center">
+                    <h3>Mini-Game 3</h3>
+                    <a id="game3-link" class="btn btn-info btn-lg w-100" href="/game3">Play Game</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        let score = 0;
+        let clickValue = 1;
+        let passiv = 0;
+        let click = 1;
+
+        let upgradeCost1 = 10;
+        let upgradeCost2 = 20;
+        let upgradeCost3 = 30;
+
+        let upgradeCost4 = 300;
+        let upgradeCost5 = 600;
+        let upgradeCost6 = 900;
+
+        let upgradeCost7 = 3000;
+        let upgradeCost8 = 6000;
+        let upgradeCost9 = 9000;
+
+        let player = {
+            upgrades: new Array(10).fill(0),  // upgrades
+            amount: 0,  // score
+            game1: 0
+        };
+
+        document.getElementById("click-button").addEventListener("click", function() {
+            player.amount += clickValue;
+            document.getElementById("score").textContent = player.amount;
+            checkUpgrade();
+        });
+
+        document.getElementById("upgrade-button1").addEventListener("click", function() {
+            if (player.amount >= upgradeCost1) {
+                player.amount -= upgradeCost1;
+                player.upgrades[0]++;
+                upgradeCost1 = 10;
+                for(let i = 0; i < player.upgrades[0]; i++) {
+                    upgradeCost1 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +1 per Click (Cost: ${upgradeCost1})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button2").addEventListener("click", function() {
+            if (player.amount >= upgradeCost2) {
+                player.amount -= upgradeCost2;
+                player.upgrades[1]++;
+                upgradeCost2 = 20;
+                for(let i = 0; i < player.upgrades[1]; i++) {
+                    upgradeCost2 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +2 per Click (Cost: ${upgradeCost2})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button3").addEventListener("click", function() {
+            if (player.amount >= upgradeCost3) {
+                player.amount -= upgradeCost3;
+                player.upgrades[2]++;
+                upgradeCost3 = 30;
+                for(let i = 0; i < player.upgrades[2]; i++) {
+                    upgradeCost3 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +3 per Click (Cost: ${upgradeCost3})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button4").addEventListener("click", function() {
+            if (player.amount >= upgradeCost4) {
+                player.amount -= upgradeCost4;
+                player.upgrades[3]++;
+                upgradeCost4 = 300;
+                for(let i = 0; i < player.upgrades[3]; i++) {
+                    upgradeCost4 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +1 per Second (Cost: ${upgradeCost4})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button5").addEventListener("click", function() {
+            if (player.amount >= upgradeCost5) {
+                player.amount -= upgradeCost5;
+                player.upgrades[4]++;
+                upgradeCost5 = 600;
+                for(let i = 0; i < player.upgrades[4]; i++) {
+                    upgradeCost5 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +2 per Second (Cost: ${upgradeCost5})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button6").addEventListener("click", function() {
+            if (player.amount >= upgradeCost6) {
+                player.amount -= upgradeCost6;
+                player.upgrades[5]++;
+                upgradeCost6 = 900;
+                for(let i = 0; i < player.upgrades[5]; i++) {
+                    upgradeCost6 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: +1 per Second (Cost: ${upgradeCost6})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button7").addEventListener("click", function() {
+            if (player.amount >= upgradeCost7) {
+                player.amount -= upgradeCost7;
+                player.upgrades[6]++;
+                upgradeCost7 = 3000;
+                for(let i = 0; i < player.upgrades[6]; i++) {
+                    upgradeCost7 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: Score + 1% (Cost: ${upgradeCost7})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button8").addEventListener("click", function() {
+            if (player.amount >= upgradeCost8) {
+                player.amount -= upgradeCost8;
+                player.upgrades[7]++;
+                upgradeCost8 = 6000;
+                for(let i = 0; i < player.upgrades[7]; i++) {
+                    upgradeCost8 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: Score + 2% (Cost: ${upgradeCost8})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        document.getElementById("upgrade-button9").addEventListener("click", function() {
+            if (player.amount >= upgradeCost9) {
+                player.amount -= upgradeCost9;
+                player.upgrades[8]++;
+                upgradeCost9 = 9000;
+                for(let i = 0; i < player.upgrades[8]; i++) {
+                    upgradeCost9 *= 2;
+                };
+                document.getElementById("score").textContent = player.amount;
+                this.textContent = `Upgrade: Score + 3% (Cost: ${upgradeCost9})`;
+                checkUpgrade();
+                clicker();
+            }
+        });
+
+        window.onload = function() {
+            fetch('/load_game')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.warn("No previous save found, starting fresh.");
+                    return;
+                }
+
+                // Assign the loaded data to the player object
+                player.upgrades = [
+                    data.upgrade1, data.upgrade2, data.upgrade3, data.upgrade4, data.upgrade5,
+                    data.upgrade6, data.upgrade7, data.upgrade8, data.upgrade9, data.upgrade10
+                ];
+                player.amount = data.amount;
+                player.game1 = data.game1;
+
+                updateUI(); // Update the display with loaded values
+            })
+            .catch(error => console.error('Failed to load game:', error));
+        };
+        function updateUI() {
+            document.getElementById("score").innerText = player.amount;
+            upgradeCost1 = 10;
+            upgradeCost2 = 20;
+            upgradeCost3 = 30;
+
+            upgradeCost4 = 300;
+            upgradeCost5 = 600;
+            upgradeCost6 = 900;
+
+            upgradeCost7 = 3000;
+            upgradeCost8 = 6000;
+            upgradeCost9 = 9000;
+
+            for(let i = 0; i < player.upgrades[0]; i++) {
+                upgradeCost1 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[1]; i++) {
+                upgradeCost2 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[2]; i++) {
+                upgradeCost3 *= 2;
+            };
+
+            for(let i = 0; i < player.upgrades[3]; i++) {
+                upgradeCost4 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[4]; i++) {
+                upgradeCost5 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[5]; i++) {
+                upgradeCost6 *= 2;
+            };
+
+            for(let i = 0; i < player.upgrades[6]; i++) {
+                upgradeCost7 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[7]; i++) {
+                upgradeCost8 *= 2;
+            };
+            for(let i = 0; i < player.upgrades[8]; i++) {
+                upgradeCost9 *= 2;
+            };
+            document.getElementById("upgrade-button1").textContent = `Upgrade: +1 per Click (Cost: ${upgradeCost1})`;
+            document.getElementById("upgrade-button2").textContent = `Upgrade: +2 per Click (Cost: ${upgradeCost2})`;
+            document.getElementById("upgrade-button3").textContent = `Upgrade: +3 per Click (Cost: ${upgradeCost3})`;
+            document.getElementById("upgrade-button4").textContent = `Upgrade: +1 per Second (Cost: ${upgradeCost4})`;
+            document.getElementById("upgrade-button5").textContent = `Upgrade: +2 per Second (Cost: ${upgradeCost5})`;
+            document.getElementById("upgrade-button6").textContent = `Upgrade: +3 per Second (Cost: ${upgradeCost6})`;
+            document.getElementById("upgrade-button7").textContent = `Upgrade: Score + 1% (Cost: ${upgradeCost7})`;
+            document.getElementById("upgrade-button8").textContent = `Upgrade: Score + 2% (Cost: ${upgradeCost8})`;
+            document.getElementById("upgrade-button9").textContent = `Upgrade: Score + 3% (Cost: ${upgradeCost9})`;
+            checkUpgrade();
+            clicker();
+        }
+
+        function checkUpgrade() {
+            //click upgrades
+            const upgradeButton1 = document.getElementById("upgrade-button1");
+            upgradeButton1.disabled = player.amount < upgradeCost1;
+            const upgradeButton2 = document.getElementById("upgrade-button2");
+            upgradeButton2.disabled = player.amount < upgradeCost2;
+            const upgradeButton3 = document.getElementById("upgrade-button3");
+            upgradeButton3.disabled = player.amount < upgradeCost3;
+            //Passiv upgrades
+            const upgradeButton4 = document.getElementById("upgrade-button4");
+            upgradeButton4.disabled = player.amount < upgradeCost4;
+            const upgradeButton5 = document.getElementById("upgrade-button5");
+            upgradeButton5.disabled = player.amount < upgradeCost5;
+            const upgradeButton6 = document.getElementById("upgrade-button6");
+            upgradeButton6.disabled = player.amount < upgradeCost6;
+            //Score upgrades
+            const upgradeButton7 = document.getElementById("upgrade-button7");
+            upgradeButton7.disabled = player.amount < upgradeCost7;
+            const upgradeButton8 = document.getElementById("upgrade-button8");
+            upgradeButton8.disabled = player.amount < upgradeCost8;
+            const upgradeButton9 = document.getElementById("upgrade-button9");
+            upgradeButton9.disabled = player.amount < upgradeCost9;
+        }
+
+        function clicker() {
+            clickValue = 1;
+            clickValue += player.upgrades[0] * 1;
+            clickValue += player.upgrades[1] * 2;
+            clickValue += player.upgrades[2] * 3;
+            click = clickValue;
+        }
+
+        function passivmath(){
+            passiv = 0;
+            passiv += player.upgrades[3] * 1;
+            passiv += player.upgrades[4] * 2;
+            passiv += player.upgrades[5] * 3;
+        }
+
+        setInterval(() => {
+            player.upgrades[9] = 0;
+            player.upgrades[9] += player.upgrades[0] * 1;
+            player.upgrades[9] += player.upgrades[1] * 1.5;
+            player.upgrades[9] += player.upgrades[2] * 2.25;
+
+            player.upgrades[9] += player.upgrades[3] * 10;
+            player.upgrades[9] += player.upgrades[4] * 15;
+            player.upgrades[9] += player.upgrades[5] * 25;
+
+            player.upgrades[9] += player.upgrades[9] * player.upgrades[6] * 0.01;
+            player.upgrades[9] += player.upgrades[9] * player.upgrades[7] * 0.02;
+            player.upgrades[9] += player.upgrades[9] * player.upgrades[8] * 0.03;
+
+            player.upgrades[9] += player.amount * 0.01;
+            player.upgrades[9] += player.game1 * 10;
+
+            player.upgrades[9] = Math.round(player.upgrades[9]);
+            const gameData = {
+                upgrade1: player.upgrades[0],
+                upgrade2: player.upgrades[1],
+                upgrade3: player.upgrades[2],
+                upgrade4: player.upgrades[3],
+                upgrade5: player.upgrades[4],
+                upgrade6: player.upgrades[5],
+                upgrade7: player.upgrades[6],
+                upgrade8: player.upgrades[7],
+                upgrade9: player.upgrades[8],
+                upgrade10: player.upgrades[9],
+                amount: player.amount
+            };
+
+            fetch('/autosave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(gameData)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Autosave:', data.message))
+            .catch(error => console.error('Autosave failed:', error));
+        }, 10000); // Every 10 seconds
+
+        setInterval(() => {
+            passivmath();
+            player.amount += passiv;
+            document.getElementById("second").textContent = `${passiv} per Second`;
+            document.getElementById("score").innerText = player.amount;
+            document.getElementById("click").textContent = `${clickValue} per Click`;
+        }, 1000)
+
+
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Ranks
+{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .podium-container {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .podium-small {
+            transform: scale(0.6);
+            padding: 10px;
+        }
+    </style>
+    <script>
+        document.addEventListener("scroll", function () {
+            let podium = document.getElementById("podium");
+            if (window.scrollY > 100) {
+                podium.classList.add("podium-small");
+            } else {
+                podium.classList.remove("podium-small");
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Leaderboard</h1>
+
+        <!-- Podium Section -->
+        <div id="podium" class="podium-container text-center d-flex justify-content-center align-items-end mb-4" style="gap: 20px;">
+            {% if rows|length > 1 %}
+            <div class="text-center" style="width: 120px;">
+                <div class="bg-secondary text-white p-3" style="border-radius: 10px; height: 120px;">🥈<br>{{ rows[1]["username"] }}<br>{{ rows[1]["upgrade10"] }}</div>
+            </div>
+            {% endif %}
+            {% if rows|length > 0 %}
+            <div class="text-center" style="width: 120px;">
+                <div class="bg-warning text-dark p-3" style="border-radius: 10px; height: 150px;">🥇<br>{{ rows[0]["username"] }}<br>{{ rows[0]["upgrade10"] }}</div>
+            </div>
+            {% endif %}
+            {% if rows|length > 2 %}
+            <div class="text-center" style="width: 120px;">
+                <div class="bg-danger text-white p-3" style="border-radius: 10px; height: 100px;">🥉<br>{{ rows[2]["username"] }}<br>{{ rows[2]["upgrade10"] }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card shadow-lg p-4">
+            <table class="table table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="py-3">Rank</th>
+                        <th class="py-3">Player</th>
+                        <th class="py-3">Game</th>
+                        <th class="py-3">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td>#{{ loop.index }}</td>
+                            <td class="fw-bold">{{ row["username"] }}</td>
+                            <td class="fw-bold">{{ row["game1"] }}</td>
+                            <td class="text-primary fw-bold">{{ row["upgrade10"] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
