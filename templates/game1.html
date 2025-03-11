@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}Bitcoin Catcher{% endblock %}
+
+{% block main %}
+    <h1 class="text-center">Bitcoin Catcher</h1>
+    <p class="text-center">Move left and right to catch the bitcoins!</p>
+    <h2 class="text-center">Score: <span id="score">0</span></h2>
+    <div class="d-flex justify-content-center">
+        <div id="game-container">
+            <div id="player"></div>
+        </div>
+    </div>
+{% endblock %}run
+
+{% block extra_scripts %}
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const player = document.getElementById("player");
+        const scoreDisplay = document.getElementById("score");
+        let score = 0;
+        let playerX = 175;
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft" && playerX > 0) {
+                playerX -= 20;
+            } else if (event.key === "ArrowRight" && playerX < 350) {
+                playerX += 20;
+            }
+            player.style.left = playerX + "px";
+        });
+
+        function spawnBitcoin() {
+            let bitcoin = document.createElement("img");
+            bitcoin.src = "static/Bitcoin.webp";
+            bitcoin.classList.add("bitcoin");
+            bitcoin.style.left = Math.random() * 370 + "px";
+            bitcoin.style.top = "0px";
+            gameContainer.appendChild(bitcoin);
+
+            let fallInterval = setInterval(() => {
+                bitcoin.style.top = parseInt(bitcoin.style.top) + 5 + "px";
+                if (parseInt(bitcoin.style.top) > 450 && parseInt(bitcoin.style.left) > playerX - 30 && parseInt(bitcoin.style.left) < playerX + 50) {
+                    score++;
+                    scoreDisplay.innerText = score;
+                    bitcoin.remove();
+                    clearInterval(fallInterval);
+                } else if (parseInt(bitcoin.style.top) > 500) {
+                    bitcoin.remove();
+                    clearInterval(fallInterval);
+                }
+            }, 50);
+        }
+        setInterval(spawnBitcoin, 1000);
+    </script>
+{% endblock %}
